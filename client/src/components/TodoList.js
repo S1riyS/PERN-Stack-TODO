@@ -2,6 +2,11 @@ import React from 'react';
 import TodoItem from "./TodoItem";
 
 const TodoList = ({todos, remove, edit}) => {
+    if (!todos.length) {
+        return (
+            <h1>List is empty</h1>
+        )
+    }
     return (
         <div className="todo__list">
             {
