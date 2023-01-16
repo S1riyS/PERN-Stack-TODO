@@ -11,13 +11,12 @@ const TodoEdit = ({todo, edit}) => {
                 data-toggle="modal"
                 data-target={`#id${todo.id}`}
             >
-                Edit
+                Edit ⤋
             </button>
 
             <div
                 className="modal"
                 id={`id${todo.id}`}
-                onClick={() => setDescription(todo.description)}
             >
                 <div className="modal-dialog">
                     <div className="modal-content">

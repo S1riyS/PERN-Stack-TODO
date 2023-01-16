@@ -19,6 +19,17 @@ function App() {
         }
     }
 
+    const getTodoByID = async id => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/todo/${id}`);
+            const jsonData = await response.json();
+
+            return jsonData
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
     const createTodo = async description => {
         try {
             const body = {description};
@@ -55,7 +66,9 @@ function App() {
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify(body)
             });
-            window.location = "/";
+            const updatedTodo = await getTodoByID(id)
+            console.log(updatedTodo);
+            setTodos([...todos.filter(todo => todo.id !== id), updatedTodo])
 
         } catch (err) {
             console.error(err.message);
