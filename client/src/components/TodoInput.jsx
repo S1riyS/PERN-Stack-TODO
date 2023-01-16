@@ -5,8 +5,10 @@ const TodoInput = ({create}) => {
 
     const onSubmitForm = async e => {
         e.preventDefault();
-        create(description)
-        setDescription('')
+        if (description.length) {
+            create(description)
+            setDescription('')
+        }
     };
 
     return <>
