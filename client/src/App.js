@@ -8,14 +8,12 @@ import TodoList from "./components/TodoList";
 function App() {
     const [todos, setTodos] = useState([]);
 
-    const removeTodo = async id => {
+    const getTodos = async () => {
         try {
-            await fetch(`http://localhost:5000/api/todo/${id}`, {
-                method: "DELETE",
-                headers: {"Content-Type": "application/json"},
-            });
-            setTodos(todos.filter(todo => todo.id !== id))
+            const response = await fetch("http://localhost:5000/api/todo");
+            const jsonData = await response.json();
 
+            setTodos(jsonData);
         } catch (err) {
             console.error(err.message);
         }
@@ -36,12 +34,29 @@ function App() {
         }
     }
 
-    const getTodos = async () => {
+    const removeTodo = async id => {
         try {
-            const response = await fetch("http://localhost:5000/api/todo");
-            const jsonData = await response.json();
+            await fetch(`http://localhost:5000/api/todo/${id}`, {
+                method: "DELETE",
+                headers: {"Content-Type": "application/json"},
+            });
+            setTodos(todos.filter(todo => todo.id !== id))
 
-            setTodos(jsonData);
+        } catch (err) {
+            console.error(err.message);
+        }
+    }
+
+    const editTodo = async (id, description) => {
+        try {
+            const body = {description};
+            await fetch(`http://localhost:5000/api/todo/${id}`, {
+                method: "PUT",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(body)
+            });
+            window.location = "/";
+
         } catch (err) {
             console.error(err.message);
         }
@@ -55,7 +70,7 @@ function App() {
         <div className="App">
             <div className="container">
                 <TodoInput create={createTodo}/>
-                <TodoList todos={todos} remove={removeTodo}/>
+                <TodoList todos={todos} remove={removeTodo} edit={editTodo}/>
             </div>
         </div>
     );
