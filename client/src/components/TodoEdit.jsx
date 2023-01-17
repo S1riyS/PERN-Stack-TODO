@@ -11,7 +11,7 @@ const TodoEdit = ({todo, edit}) => {
                 data-toggle="modal"
                 data-target={`#id${todo.id}`}
             >
-                Edit ⤋
+                Edit
             </button>
 
             <div
