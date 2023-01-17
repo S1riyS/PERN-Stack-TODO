@@ -17,7 +17,7 @@ class todoController {
     async getAll(req, res) {
         try {
             const allTodos = await pool.query(
-                "SELECT * FROM todo"
+                "SELECT * FROM todo ORDER BY id DESC"
             )
             res.json(allTodos.rows)
         } catch (e) {
@@ -42,7 +42,7 @@ class todoController {
         try {
             const {id} = req.params;
             const {description} = req.body;
-            const updateTodo = await pool.query(
+            await pool.query(
                 "UPDATE todo SET description = $1 WHERE id = $2",
                 [description, id]
             );
@@ -55,7 +55,7 @@ class todoController {
     async delete(req, res) {
         try {
             const {id} = req.params;
-            const deleteTodo = await pool.query("DELETE FROM todo WHERE id = $1",
+            await pool.query("DELETE FROM todo WHERE id = $1",
                 [id]
             );
             res.json("Todo was deleted!");
