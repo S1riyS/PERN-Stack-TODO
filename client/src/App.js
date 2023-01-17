@@ -32,24 +32,20 @@ function App() {
     }
 
     const removeTodo = id => {
-        remove(id)
-            .then(() => {
-                setTodos(todos.filter(todo => todo.id !== id))
-            })
+        remove(id).then(() => {})
+        setTodos(todos.filter(todo => todo.id !== id))
+
     }
 
     const editTodo = (id, description) => {
-        update(id, description)
-            .then(() => {
-                setTodos(prev => prev.map(item => {
-                    if (item.id === id) return {...item, description: description}
-                    return item
-                }))
-            })
+        update(id, description).then(() => {})
+        setTodos(prev => prev.map(item => {
+            if (item.id === id) return {...item, description: description}
+            return item
+        }))
     }
 
-    useEffect(getTodos, [todos])
-
+    useEffect(getTodos, [])
 
     return (
         <div className="App">
