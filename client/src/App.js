@@ -1,84 +1,55 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
+
+import {getAll, create, remove, update} from "./Api";
 
 import './styles/App.css'
-import TodoInput from "./components/TodoInput";
+import {TodoInput} from "./components/TodoInput";
 import TodoList from "./components/TodoList";
 
 
 function App() {
     const [todos, setTodos] = useState([]);
 
-    const getTodos = async () => {
-        try {
-            const response = await fetch("http://localhost:5000/api/todo");
-            const jsonData = await response.json();
-
-            setTodos(jsonData);
-        } catch (err) {
-            console.error(err.message);
-        }
+    const getTodos = () => {
+        getAll()
+            .then(object => {
+                setTodos(object.data);
+            })
+            .catch(object => {
+                console.log(object);
+            })
     }
 
-    const getTodoByID = async id => {
-        try {
-            const response = await fetch(`http://localhost:5000/api/todo/${id}`);
-            return await response.json()
-        } catch (err) {
-            console.error(err.message);
-        }
+    const createTodo = description => {
+        create(description)
+            .then(object => {
+                const newTodo = object.data
+                setTodos([newTodo, ...todos])
+            })
+            .catch(object => {
+                console.log(object);
+            })
     }
 
-    const createTodo = async description => {
-        try {
-            const body = {description};
-            const response = await fetch("http://localhost:5000/api/todo", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            const newTodo = await response.json();
-            setTodos([...todos, newTodo])
-        } catch (err) {
-            console.error(err.message);
-        }
+    const removeTodo = id => {
+        remove(id)
+            .then(() => {
+                setTodos(todos.filter(todo => todo.id !== id))
+            })
     }
 
-    const removeTodo = async id => {
-        try {
-            await fetch(`http://localhost:5000/api/todo/${id}`, {
-                method: "DELETE",
-                headers: {"Content-Type": "application/json"},
-            });
-            setTodos(todos.filter(todo => todo.id !== id))
-
-        } catch (err) {
-            console.error(err.message);
-        }
+    const editTodo = (id, description) => {
+        update(id, description)
+            .then(() => {
+                setTodos(prev => prev.map(item => {
+                    if (item.id === id) return {...item, description: description}
+                    return item
+                }))
+            })
     }
 
-    const editTodo = async (id, description) => {
-        try {
-            const body = {description};
-            await fetch(`http://localhost:5000/api/todo/${id}`, {
-                method: "PUT",
-                headers: {"Content-Type": "application/json"},
-                body: JSON.stringify(body)
-            });
-            const updatedTodo = await getTodoByID(id)
-            console.log(updatedTodo);
-            setTodos(prev => prev.map(item => {
-                if (item.id === id) return {...item, description: description}
-                return item
-            }))
+    useEffect(getTodos, [todos])
 
-        } catch (err) {
-            console.error(err.message);
-        }
-    }
-
-    useEffect(() => {
-        getTodos();
-    }, []);
 
     return (
         <div className="App">
