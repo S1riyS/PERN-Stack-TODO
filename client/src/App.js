@@ -22,9 +22,7 @@ function App() {
     const getTodoByID = async id => {
         try {
             const response = await fetch(`http://localhost:5000/api/todo/${id}`);
-            const jsonData = await response.json();
-
-            return jsonData
+            return await response.json()
         } catch (err) {
             console.error(err.message);
         }
@@ -68,7 +66,10 @@ function App() {
             });
             const updatedTodo = await getTodoByID(id)
             console.log(updatedTodo);
-            setTodos([...todos.filter(todo => todo.id !== id), updatedTodo])
+            setTodos(prev => prev.map(item => {
+                if (item.id === id) return {...item, description: description}
+                return item
+            }))
 
         } catch (err) {
             console.error(err.message);
