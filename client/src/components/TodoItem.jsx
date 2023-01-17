@@ -1,16 +1,20 @@
 import React from 'react';
 
-const TodoItem = ({todo, deleteTodo}) => {
+import TodoEdit from "./TodoEdit";
 
+const TodoItem = ({todo, remove, edit}) => {
     return (
         <div className='todo__item'>
             {todo.description}
-            <button
-                className="btn btn-danger"
-                onClick={() => deleteTodo(todo.id)}
-            >
-                Delete
-            </button>
+            <div className="item__buttons">
+                <TodoEdit edit={edit} todo={todo}/>
+                <button
+                    className="btn btn-danger"
+                    onClick={() => remove(todo.id)}
+                >
+                    Delete
+                </button>
+            </div>
         </div>
     );
 };
